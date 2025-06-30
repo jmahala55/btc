@@ -584,9 +584,9 @@ const BitcoinForecastingDashboard = () => {
   }, [forecastData, selectedModel, historicalData]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen" style={{background: 'var(--bg-primary)', color: 'var(--text-primary)'}}>
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700 p-4">
+      <div className="terminal-header">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
             <h1 className="text-2xl font-bold text-purple-500 flex items-center">
@@ -595,12 +595,12 @@ const BitcoinForecastingDashboard = () => {
             </h1>
             {currentPrice && (
               <div className="flex items-center space-x-4">
-                <span className="text-2xl font-mono">
+                <span className="text-2xl price-display">
                   {formatPrice(currentPrice.price)}
                 </span>
                 <span className={`flex items-center px-2 py-1 rounded text-sm ${
-                  (currentPrice.change_24h || 0) >= 0 ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'
-                }`}>
+  (currentPrice.change_24h || 0) >= 0 ? 'price-change-positive' : 'price-change-negative'
+}`}>
                   {(currentPrice.change_24h || 0) >= 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
                   {formatPercent(currentPrice.change_24h / 100 || 0)}
                 </span>
@@ -636,7 +636,7 @@ const BitcoinForecastingDashboard = () => {
             <button
               onClick={generateForecasts}
               disabled={isLoading}
-              className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm transition-colors disabled:opacity-50"
+              className="btn-primary px-4 py-2 rounded text-sm disabled:opacity-50"
             >
               {isLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Run Models'}
             </button>
@@ -653,10 +653,10 @@ const BitcoinForecastingDashboard = () => {
             <div
               key={model.id}
               onClick={() => setSelectedModel(model.id)}
-              className={`cursor-pointer p-4 rounded-lg border-2 transition-all ${
+              className={`cursor-pointer terminal-panel ${
                 selectedModel === model.id 
                   ? 'border-purple-500 bg-purple-900/30' 
-                  : 'border-gray-700 bg-gray-800 hover:border-gray-600'
+                  : 'hover:border-gray-600'
               }`}
             >
               <div className="text-center">
@@ -771,22 +771,22 @@ const BitcoinForecastingDashboard = () => {
           
           {/* ARIMA-GARCH Metrics */}
           {forecastData.arima && (
-            <div className="bg-gray-800 rounded-lg border border-gray-700 p-4">
+            <div className="metric-card">
               <h3 className="text-lg font-semibold mb-3 text-blue-400 flex items-center">
                 📈 ARIMA-GARCH
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Mean Return:</span>
-                  <span className="font-mono">{formatPercent(forecastData.arima.metrics.meanReturn)}</span>
+                <span className="metric-label">Mean Return:</span>
+                  <span className="metric-value">{formatPercent(forecastData.arima.metrics.meanReturn)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Volatility:</span>
-                  <span className="font-mono">{formatPercent(forecastData.arima.metrics.volatility)}</span>
+                  <span className="metric-value">{formatPercent(forecastData.arima.metrics.volatility)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>AIC:</span>
-                  <span className="font-mono">{forecastData.arima.metrics.aic.toFixed(2)}</span>
+                  <span className="metric-value">{forecastData.arima.metrics.aic.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>BIC:</span>
@@ -832,19 +832,19 @@ const BitcoinForecastingDashboard = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Mean Price:</span>
-                  <span className="font-mono">{formatPrice(forecastData.monteCarlo.metrics.mean)}</span>
+                  <span className="metric-value">{formatPrice(forecastData.monteCarlo.metrics.mean)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Median:</span>
-                  <span className="font-mono">{formatPrice(forecastData.monteCarlo.metrics.median)}</span>
+                  <span className="metric-value">{formatPrice(forecastData.monteCarlo.metrics.median)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>95th %ile:</span>
-                  <span className="font-mono">{formatPrice(forecastData.monteCarlo.metrics.percentile95)}</span>
+                  <span className="metric-value">{formatPrice(forecastData.monteCarlo.metrics.percentile95)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>5th %ile:</span>
-                  <span className="font-mono">{formatPrice(forecastData.monteCarlo.metrics.percentile5)}</span>
+                  <span className="metric-value">{formatPrice(forecastData.monteCarlo.metrics.percentile5)}</span>
                 </div>
               </div>
             </div>
@@ -859,15 +859,15 @@ const BitcoinForecastingDashboard = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Implied Vol:</span>
-                  <span className="font-mono">{formatPercent(forecastData.blackScholes.metrics.impliedVol)}</span>
+                  <span className="metric-value">{formatPercent(forecastData.blackScholes.metrics.impliedVol)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Delta:</span>
-                  <span className="font-mono">{forecastData.blackScholes.metrics.delta.toFixed(3)}</span>
+                  <span className="metric-value">{forecastData.blackScholes.metrics.delta.toFixed(3)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Gamma:</span>
-                  <span className="font-mono">{forecastData.blackScholes.metrics.gamma.toFixed(3)}</span>
+                  <span className="metric-value">{forecastData.blackScholes.metrics.gamma.toFixed(3)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Vega:</span>
@@ -890,15 +890,15 @@ const BitcoinForecastingDashboard = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Jump Intensity:</span>
-                    <span className="font-mono">{formatPercent(forecastData.jumpDiffusion.metrics.jumpIntensity)}</span>
+                    <span className="metric-value">{formatPercent(forecastData.jumpDiffusion.metrics.jumpIntensity)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Expected Jumps:</span>
-                    <span className="font-mono">{forecastData.jumpDiffusion.metrics.expectedJumps.toFixed(1)}</span>
+                    <span className="metric-value">{forecastData.jumpDiffusion.metrics.expectedJumps.toFixed(1)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Jump Size:</span>
-                    <span className="font-mono">{formatPercent(forecastData.jumpDiffusion.metrics.jumpSize)}</span>
+                    <span className="metric-value">{formatPercent(forecastData.jumpDiffusion.metrics.jumpSize)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Skewness:</span>
@@ -920,7 +920,7 @@ const BitcoinForecastingDashboard = () => {
                     {forecastData.markov.regimes.map((regime, index) => (
                       <div key={index} className="flex justify-between">
                         <span>{regime.name}:</span>
-                        <span className="font-mono">{formatPercent(regime.probability)}</span>
+                        <span className="metric-value">{formatPercent(regime.probability)}</span>
                       </div>
                     ))}
                   </div>
@@ -961,7 +961,7 @@ const BitcoinForecastingDashboard = () => {
 
         {/* Model Comparison Summary */}
         {Object.keys(forecastData).length > 0 && (
-          <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
+          <div className="terminal-panel p-6">
             <h3 className="text-xl font-semibold mb-4 text-purple-400">Model Performance Summary</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">

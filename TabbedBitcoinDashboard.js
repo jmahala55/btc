@@ -63,25 +63,42 @@ const TabbedBitcoinDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen" style={{background: '#000000', color: 'var(--text-primary)'}}>
       {/* Unified Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
+      <div className="terminal-header" style={{background: '#000000', borderBottom: '1px solid #222222'}}>
         {/* Top Bar with Price */}
-        <div className="px-6 py-4 border-b border-gray-700">
+        <div className="px-6 py-4" style={{borderBottom: '1px solid var(--border-primary)'}}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
-              <h1 className="text-2xl font-bold text-yellow-500 flex items-center">
-                <span className="text-3xl mr-3">₿</span>
-                Bitcoin Professional Suite
-              </h1>
+            <h1 className="text-3xl font-light flex items-center tracking-wide" style={{
+  color: '#ffffff',
+  fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif',
+  letterSpacing: '0.02em'
+}}>
+  <span className="text-4xl mr-4" style={{
+    background: 'linear-gradient(135deg, #f7931a, #ff6b35)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
+  }}>⚛</span>
+  <span style={{fontWeight: 300}}>MAHALA</span>
+  <span style={{
+    fontWeight: 600,
+    marginLeft: '8px',
+    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
+  }}>QUANTUM</span>
+</h1>
               {currentPrice && (
                 <div className="flex items-center space-x-4">
-                  <span className="text-3xl font-mono">
+                  <span className="text-3xl price-display">
                     {formatPrice(currentPrice.price)}
                   </span>
                   <span className={`flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
-                    (currentPrice.change_24h || 0) >= 0 ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'
-                  }`}>
+  (currentPrice.change_24h || 0) >= 0 ? 'price-change-positive' : 'price-change-negative'
+}`}>
                     {(currentPrice.change_24h || 0) >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
                     {(currentPrice.change_24h || 0).toFixed(2)}%
                   </span>
@@ -92,7 +109,7 @@ const TabbedBitcoinDashboard = () => {
             <button
               onClick={fetchCurrentPrice}
               disabled={isLoading}
-              className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
+              className="btn-secondary p-2 rounded-lg disabled:opacity-50"
               title="Refresh Price"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -109,11 +126,15 @@ const TabbedBitcoinDashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center px-6 py-4 text-sm font-medium transition-colors relative ${
+                  className={`flex items-center px-6 py-4 text-sm font-medium relative ${
                     activeTab === tab.id
-                      ? 'text-white bg-gray-700'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-gray-750'
+                      ? 'text-white'
+                      : 'text-gray-400 hover:text-gray-200'
                   }`}
+                  style={{
+                    background: activeTab === tab.id ? 'var(--bg-quaternary)' : 'transparent',
+                    transition: 'var(--transition-fast)'
+                  }}
                 >
                   <IconComponent className="w-4 h-4 mr-2" />
                   <div className="text-left">
@@ -123,7 +144,7 @@ const TabbedBitcoinDashboard = () => {
                   
                   {/* Active tab indicator */}
                   {activeTab === tab.id && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{background: 'var(--color-bitcoin)'}}></div>
                   )}
                 </button>
               );
@@ -150,7 +171,11 @@ const TabbedBitcoinDashboard = () => {
       </div>
 
       {/* Status Bar */}
-      <div className="bg-gray-800 border-t border-gray-700 px-6 py-2 flex items-center justify-between text-xs text-gray-400">
+      <div className="px-6 py-2 flex items-center justify-between text-xs" style={{
+  background: 'var(--bg-secondary)', 
+  borderTop: '1px solid var(--border-primary)',
+  color: 'var(--text-muted)'
+}}>
         <div className="flex items-center space-x-4">
           <span>Active Tab: {tabs.find(t => t.id === activeTab)?.name}</span>
           <span>•</span>
@@ -159,8 +184,10 @@ const TabbedBitcoinDashboard = () => {
           <span>Last Update: {new Date().toLocaleTimeString()}</span>
         </div>
         <div className="flex items-center space-x-4">
-          <div className={`flex items-center space-x-1 ${isLoading ? 'text-yellow-400' : 'text-green-400'}`}>
-            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
+        <div className={`flex items-center space-x-1 ${isLoading ? 'status-loading' : 'status-connected'}`}>
+        <div className={`w-2 h-2 rounded-full ${isLoading ? 'animate-pulse' : ''}`} style={{
+  background: isLoading ? 'var(--color-warning)' : 'var(--color-success)'
+}}></div>
             <span>{isLoading ? 'Updating...' : 'Live'}</span>
           </div>
         </div>
